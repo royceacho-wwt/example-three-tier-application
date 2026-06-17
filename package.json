@@ -1,0 +1,9 @@
+{
+  "name": "root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo root — workspace-level developer scripts.",
+  "scripts": {
+    "find-todos": "node scripts/find-todos.js"
+  }
+}
