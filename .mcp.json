@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "codebase-tools": {
+      "command": "node",
+      "args": ["mcp-server.js"],
+      "cwd": ".",
+      "description": "Codebase utility tools including TODO search"
+    }
+  }
+}
