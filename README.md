@@ -1,3 +1,5 @@
+This is a test from Forge AI
+
 # example-three-tier-application
 
 A reference implementation of a three-tier web application: a Next.js frontend, an Express REST API, and a PostgreSQL database. It runs locally with Docker Compose and deploys to Google Cloud Platform (Cloud Run + Cloud SQL) via Terraform.
@@ -101,32 +103,86 @@ The `src/infrastructure/` directory contains Terraform that provisions:
 | Variable | Description |
 |----------|-------------|
 | `project_id` | GCP project ID |
-| `api_image` | Container image URI for the API (e.g. `gcr.io/PROJECT/api:TAG`) |
-| `web_image` | Container image URI for the web frontend |
+| `api_image` | Container image URL for the API (e.g., `gcr.io/PROJECT/api:TAG`) |
+| `web_image` | Container image URL for the web frontend |
 | `region` | GCP region (default: `us-central1`) |
-| `environment` | `dev`, `staging`, or `prod` (default: `dev`) |
+| `db_password` | PostgreSQL password (mark as sensitive) |
+
+### Steps
+
+1. **Build and push images** (example using Artifact Registry):
+
+   ```bash
+   gcloud auth configure-docker us-central1-docker.pkg.dev
+
+   # Build and push API
+   docker build -t us-central1-docker.pkg.dev/PROJECT_ID/app/api:latest src/api
+   docker push us-central1-docker.pkg.dev/PROJECT_ID/app/api:latest
+
+   # Build and push web
+   docker build -t us-central1-docker.pkg.dev/PROJECT_ID/app/web:latest src/web
+   docker push us-central1-docker.pkg.dev/PROJECT_ID/app/web:latest
+   ```
+
+2. **Configure Terraform variables**:
+
+   ```bash
+   cd src/infrastructure
+   cp terraform.tfvars.example terraform.tfvars
+   # Edit terraform.tfvars with your values
+   ```
+
+3. **Deploy**:
+
+   ```bash
+   terraform init
+   terraform plan
+   terraform apply
+   ```
+
+4. **Run migrations** (one-time or after schema changes):
+
+   The migration job is defined in `migration.tf`. To trigger it:
+
+   ```bash
+   gcloud run jobs execute db-migrate --region=us-central1
+   ```
+
+5. **Access the app**:
+
+   Terraform outputs the `web_url`. Open it in your browser.
+
+### Cleanup
 
 ```bash
-cd src/infrastructure
-terraform init
-terraform apply -var="project_id=my-project" \
-                -var="api_image=gcr.io/my-project/api:latest" \
-                -var="web_image=gcr.io/my-project/web:latest"
+terraform destroy
 ```
 
-After apply, `terraform output web_url` gives the public URL.
+## Development
 
-## Database migrations
-
-Migrations live in `src/db/migrations/` and use [node-pg-migrate](https://salsita.github.io/node-pg-migrate/).
+### Adding a migration
 
 ```bash
-# Apply all pending migrations (run inside the db container or with DATABASE_URL set)
 cd src/db
-DATABASE_URL=postgres://app:app@localhost:5432/app npx node-pg-migrate up
-
-# Roll back the last migration
-DATABASE_URL=postgres://app:app@localhost:5432/app npx node-pg-migrate down
+npm run migrate create my-migration-name
+# Edit the new file in migrations/
 ```
 
-When running via Docker Compose the `migrate` service handles this automatically on startup.
+Then rebuild the migrate service:
+
+```bash
+docker compose up --build migrate
+```
+
+### Environment variables
+
+| Service | Variable | Description |
+|---------|----------|-------------|
+| api | `PORT` | API server port (default: 3001) |
+| api | `DATABASE_URL` | PostgreSQL connection string |
+| web | `PORT` | Web server port (default: 3000) |
+| web | `API_URL` | Internal URL to the API (e.g., `http://api:3001`) |
+
+## License
+
+MIT
