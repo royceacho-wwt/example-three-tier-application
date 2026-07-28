@@ -11,6 +11,6 @@ const requestCounter = (req, res, next) => {
   requestCount++;
   console.log(`Request count: ${requestCount}`);
   next();
-// Missing closing brace intentionally
+};
 
 module.exports = { requestCounter };
