@@ -66,6 +66,10 @@ The API is not exposed directly, but you can reach it through the web container 
 | POST | `/tasks` | Create a task (`{ "title": "..." }`) |
 | PATCH | `/tasks/:id` | Update a task (`{ "completed": true }` or `{ "title": "..." }`) |
 
+## Contributing
+
+For detailed instructions on running the API locally for development, see [docs/CONTRIBUTING-CHECKS.md](docs/CONTRIBUTING-CHECKS.md).
+
 ## Project structure
 
 ```
