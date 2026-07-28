@@ -1,0 +1,14 @@
+name: Strict gate
+
+on:
+  pull_request:
+
+jobs:
+  gate:
+    name: Strict gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail
+        run: |
+          echo "policy gate: this repository requires a signed release manifest"
+          exit 1
