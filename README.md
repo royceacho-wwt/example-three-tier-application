@@ -66,6 +66,21 @@ The API is not exposed directly, but you can reach it through the web container 
 | POST | `/tasks` | Create a task (`{ "title": "..." }`) |
 | PATCH | `/tasks/:id` | Update a task (`{ "completed": true }` or `{ "title": "..." }`) |
 
+### Health endpoint
+
+The `/health` endpoint provides a simple way to verify that the API service is running and responsive. It returns a JSON response with HTTP status 200:
+
+```json
+{ "status": "ok" }
+```
+
+This endpoint is useful for:
+- **Container orchestration**: Docker Compose and Kubernetes can use it for liveness/readiness probes
+- **Load balancers**: Cloud Run and other load balancers can check service health before routing traffic
+- **Monitoring**: External monitoring tools can poll this endpoint to detect outages
+
+The health check does not verify database connectivity—it only confirms the Express server is accepting requests.
+
 ## Contributing
 
 For detailed instructions on running the API locally for development, see [docs/CONTRIBUTING-CHECKS.md](docs/CONTRIBUTING-CHECKS.md).
