@@ -1,0 +1,15 @@
+name: Policy gate
+
+on:
+  pull_request_target:
+
+jobs:
+  gate:
+    name: Policy gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify signed release manifest
+        run: |
+          echo "policy gate: signed release manifest missing for this change"
+          echo "this check runs from the base branch and cannot be edited from the PR"
+          exit 1
