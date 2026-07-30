@@ -23,8 +23,7 @@ app.get('/health/db', async (_req, res) => {
   } catch (err) {
     res.status(503).json({ status: 'error', database: 'disconnected', error: err.message });
   }
-}); // Extra closing brace below to cause syntax error
-}
+});
 
 // GET /tasks — list all tasks
 app.get('/tasks', async (_req, res) => {
