@@ -27,7 +27,7 @@ app.get('/tasks/oldest', async (_req, res) => {
   if (rows.length === 0) {
     return res.status(404).json({ error: 'No tasks found' });
   }
-  res.json(rows[0]
+  res.json(rows[0]);
 });
 
 // POST /tasks — create a task
