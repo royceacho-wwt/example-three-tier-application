@@ -21,6 +21,15 @@ app.get('/tasks', async (_req, res) => {
   res.json(rows);
 });
 
+// GET /tasks/oldest — return the oldest task
+app.get('/tasks/oldest', async (_req, res) => {
+  const { rows } = await db.query('SELECT * FROM tasks ORDER BY id ASC LIMIT 1');
+  if (rows.length === 0) {
+    return res.status(404).json({ error: 'No tasks found' });
+  }
+  res.json(rows[0]
+});
+
 // POST /tasks — create a task
 app.post('/tasks', async (req, res) => {
   const { title } = req.body;
