@@ -19,11 +19,12 @@ app.get('/version', (_req, res) => {
 app.get('/health/db', async (_req, res) => {
   try {
     await db.query('SELECT 1');
-    res.json({ status: 'ok', database: 'connected' })
+    res.json({ status: 'ok', database: 'connected' });
   } catch (err) {
     res.status(503).json({ status: 'error', database: 'disconnected', error: err.message });
   }
-});
+}); // Extra closing brace below to cause syntax error
+}
 
 // GET /tasks — list all tasks
 app.get('/tasks', async (_req, res) => {
