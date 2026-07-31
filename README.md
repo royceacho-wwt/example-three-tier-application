@@ -64,7 +64,35 @@ The API is not exposed directly, but you can reach it through the web container 
 | GET | `/health` | Health check |
 | GET | `/tasks` | List all tasks |
 | POST | `/tasks` | Create a task (`{ "title": "..." }`) |
-| PATCH | `/tasks/:id` | Update a task (`{ "completed": true }` or `{ "title": "..." }`) |
+| PATCH | `/tasks/:id` | Update a task: toggle completion with `{ "completed": true }` or rename with `{ "title": "New name" }` |
+
+#### PATCH /tasks/:id
+
+Updates an existing task. You can provide one or both fields:
+
+- **`completed`** (boolean) — marks the task as complete or incomplete
+- **`title`** (string) — renames the task
+
+**Examples:**
+
+```bash
+# Toggle completion
+curl -X PATCH http://localhost:3001/tasks/1 \
+  -H "Content-Type: application/json" \
+  -d '{"completed": true}'
+
+# Rename a task
+curl -X PATCH http://localhost:3001/tasks/1 \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Buy groceries"}'
+
+# Update both at once
+curl -X PATCH http://localhost:3001/tasks/1 \
+  -H "Content-Type: application/json" \
+  -d '{"completed": true, "title": "Buy groceries"}'
+```
+
+Returns 404 if the task ID does not exist.
 
 ### Health endpoint
 
