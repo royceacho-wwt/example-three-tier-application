@@ -109,6 +109,22 @@ This endpoint is useful for:
 
 The health check does not verify database connectivity—it only confirms the Express server is accepting requests.
 
+## Frontend Features
+
+The Next.js frontend provides an interactive task management interface with the following capabilities:
+
+- **Add tasks** — Use the input field at the top to create new tasks
+- **Toggle completion** — Click the checkbox next to any task to mark it complete or incomplete
+- **Inline rename** — Click the "Rename" button next to any task to edit its title. The interface provides:
+  - A text input with the current title pre-filled
+  - "Save" button to commit the change
+  - "Cancel" button to discard edits
+  - Keyboard shortcuts: **Enter** to save, **Escape** to cancel
+- **Responsive design** — The UI adapts to light and dark mode based on system preferences
+- **Real-time updates** — All interactions use client-side state management to provide immediate feedback
+
+The frontend communicates with the API through server actions defined in `src/web/app/actions.ts`.
+
 ## Contributing
 
 For detailed instructions on running the API locally for development, see [docs/CONTRIBUTING-CHECKS.md](docs/CONTRIBUTING-CHECKS.md).
