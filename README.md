@@ -64,7 +64,35 @@ The API is not exposed directly, but you can reach it through the web container 
 | GET | `/health` | Health check |
 | GET | `/tasks` | List all tasks |
 | POST | `/tasks` | Create a task (`{ "title": "..." }`) |
-| PATCH | `/tasks/:id` | Update a task (`{ "completed": true }` or `{ "title": "..." }`) |
+| PATCH | `/tasks/:id` | Update a task: toggle completion with `{ "completed": true }` or rename with `{ "title": "New name" }` |
+
+#### PATCH /tasks/:id
+
+Updates an existing task. You can provide one or both fields:
+
+- **`completed`** (boolean) — marks the task as complete or incomplete
+- **`title`** (string) — renames the task
+
+**Examples:**
+
+```bash
+# Toggle completion
+curl -X PATCH http://localhost:3001/tasks/1 \
+  -H "Content-Type: application/json" \
+  -d '{"completed": true}'
+
+# Rename a task
+curl -X PATCH http://localhost:3001/tasks/1 \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Buy groceries"}'
+
+# Update both at once
+curl -X PATCH http://localhost:3001/tasks/1 \
+  -H "Content-Type: application/json" \
+  -d '{"completed": true, "title": "Buy groceries"}'
+```
+
+Returns 404 if the task ID does not exist.
 
 ### Health endpoint
 
@@ -80,6 +108,22 @@ This endpoint is useful for:
 - **Monitoring**: External monitoring tools can poll this endpoint to detect outages
 
 The health check does not verify database connectivity—it only confirms the Express server is accepting requests.
+
+## Frontend Features
+
+The Next.js frontend provides an interactive task management interface with the following capabilities:
+
+- **Add tasks** — Use the input field at the top to create new tasks
+- **Toggle completion** — Click the checkbox next to any task to mark it complete or incomplete
+- **Inline rename** — Click the "Rename" button next to any task to edit its title. The interface provides:
+  - A text input with the current title pre-filled
+  - "Save" button to commit the change
+  - "Cancel" button to discard edits
+  - Keyboard shortcuts: **Enter** to save, **Escape** to cancel
+- **Responsive design** — The UI adapts to light and dark mode based on system preferences
+- **Real-time updates** — All interactions use client-side state management to provide immediate feedback
+
+The frontend communicates with the API through server actions defined in `src/web/app/actions.ts`.
 
 ## Contributing
 
